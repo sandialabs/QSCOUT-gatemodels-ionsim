@@ -1,0 +1,3 @@
+include pyproject.toml
+recursive-include src/qscout/v1/std/ionsim *.pyg
+recursive-include examples *
