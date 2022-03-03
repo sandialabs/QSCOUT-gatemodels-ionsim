@@ -43,8 +43,7 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
             The names of the erorr parameters to use.
 
         v0 : dict
-            The value of each error parameter, measured by its absolute difference from the value
-            for an ideal gate.
+            The value of each error parameter, measured by its difference from the value for an ideal gate.
 
         sigmas : dict
             The value of each error parameter, measured by its Gaussian width centered about v0[name].        
@@ -72,8 +71,8 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
 
         R gates are Raman gates with two laser tones: 0 and 1.
 
-        MS gates are Raman gates with three laser tones: 0, 1, and 2, where
-        tone 0 is the global beam and where tones 1 and 2 are the individual beams.
+        MS gates are Raman gates with three laser tones: 0, 1, and 2, where the
+        paris (0, 1) and (0, 2) make Raman transitions. All beams are considered global.
 
         """
         
@@ -220,21 +219,40 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
 
     # For every gate, we need to specify a superoperator and a duration:
 
-    def angles_in_principle_ranges(self, phi, theta):
-        phi = phi if theta >= 0 else phi + np.pi
-        theta = abs(theta)
+    def angles_in_principle_ranges(self, phi, theta, num_qubits):
+        '''Translate angles into the following ranges:
 
-        if theta > np.pi:
-            phi = phi + np.pi
-            theta = 2*np.pi - theta 
+        For single-qubit gates,
+
+            0 <= phi <= 2 pi
+            0 <= theta <= pi
+
+
+        For two-qubit gates,
+
+            0 <= phi <= 2 pi
+            -pi <= theta <= pi'''
+
+        if abs(phi) > 2*np.pi:
+            raise Exception(f'Phi is out of range: phi = {phi}')
+        if abs(theta) > np.pi:
+            raise Exception(f'Theta is out of range: theta = {theta}')
+
+        if num_qubits == 1:
+            phi = phi if theta >= 0 else phi + np.pi
+            theta = abs(theta)
+            # if theta > np.pi:
+            #     phi = phi + np.pi
+            #     theta = 2*np.pi - theta 
 
         phi = phi if phi >= 0 else phi + 2*np.pi
         phi = phi % (2*np.pi)
+
         return phi, theta
 
     def gateduration_R(self, q, phi, theta):
         """Compute duration of a time stretched R gate"""
-        phi, theta = self.angles_in_principle_ranges(phi, theta)
+        phi, theta = self.angles_in_principle_ranges(phi, theta, 1)
         opfactory = self.gate_data['R'].opfactory
         # power0, t0, param_ranges, arg_ranges, adjust_time = opfactory.meta_data
         time_stretch = self.v0_complete['time_stretch']
@@ -243,7 +261,7 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
 
     def gate_R(self, q, phi, theta):
         """Generate a process matrix for a time stretched gate"""
-        phi, theta = self.angles_in_principle_ranges(phi, theta)
+        phi, theta = self.angles_in_principle_ranges(phi, theta, 1)
         # print("... computing R gate... phi/pi, theta/pi = ", phi/np.pi, theta/np.pi)
         opfactory = self.gate_data['R'].opfactory
         param_ranges = self.gate_data['R'].param_ranges
@@ -263,7 +281,7 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
     # GJMS
     def gateduration_MS(self, q0, q1, phi, theta):
         """Compute duration of a time stretched MS gate"""
-        phi, theta = self.angles_in_principle_ranges(phi, theta)
+        phi, theta = self.angles_in_principle_ranges(phi, theta, 2)
         opfactory = self.gate_data['MS'].opfactory
         # power0, t0, param_ranges, arg_ranges, adjust_time = opfactory.meta_data
         time_stretch = self.v0_complete['time_stretch']
@@ -272,7 +290,7 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
 
     def gate_MS(self, q0, q1, phi, theta):
         """Generate a process matrix for a time stretched gate"""
-        phi, theta = self.angles_in_principle_ranges(phi, theta)
+        phi, theta = self.angles_in_principle_ranges(phi, theta, 2)
         # print("... computing MS gate... phi/pi, theta/pi = ", phi/np.pi, theta/np.pi)
         opfactory = self.gate_data['MS'].opfactory
         param_ranges = self.gate_data['MS'].param_ranges
