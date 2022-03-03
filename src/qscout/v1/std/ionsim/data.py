@@ -33,9 +33,9 @@ def get_gate_data(model_name, params):
 
     data = _gate_data[(model_name, params_str)] = GateData(model_name, params)
 
-    import pkgutil, dill
+    import pkgutil, pickle
     for name in GATE_NAMES:
         raw = pkgutil.get_data(parent_path, f"{model_name}/{name}_phi_theta_{params_str}.pyg")
-        data[name] = dill.loads(raw)
+        data[name] = pickle.loads(raw)
 
     return data
