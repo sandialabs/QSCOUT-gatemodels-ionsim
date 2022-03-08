@@ -80,8 +80,8 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
 
         if self.model is None or self.params is None or self.v0 is None:
             self.model = 'standard'
-            self.params = ['dOmega1', 'dtime']
-            self.v0 = [0, 0]
+            self.params = ['dpower12', 'dtime']
+            self.v0 = {'dpower12': 0, 'dtime': 0}
             self.sigmas = None
 
         # inputs = self.datadir.split('_')
