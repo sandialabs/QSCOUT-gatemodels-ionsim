@@ -181,8 +181,8 @@ class SingleQubitTargetOp(TargetOp):
 
     def create_target_unitary(self, theta, phi, sigI, sigX, sigY, sigZ):
         import numpy as _np
-        return (_np.cos(theta/2) * sigI +
-               1.j * _np.sin(theta/2) * (_np.cos(phi) * sigX + _np.sin(phi) * sigY))
+        return (_np.cos(theta/2) * sigI
+                - 1.j * _np.sin(theta/2) * (_np.cos(phi) * sigX + _np.sin(phi) * sigY))
 
 class SingleQubitGate(Gate):
     def __init__(self, fock_state=0, n_modes=1, n_dimensions=3,
