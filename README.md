@@ -11,7 +11,7 @@ the internals of the testbed and test more advanced implementations of quantum
 operations.
 
 This Python package allows [JaqalPaq](https://gitlab.com/jaqal/jaqalpaq)
-using microscopic models of the physical behavior of the QSCOUT hardware
+to use microscopic models of the physical behavior of the QSCOUT hardware
 to emulate the native its gate set.
 
 ## Installation
