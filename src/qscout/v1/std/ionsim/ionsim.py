@@ -276,7 +276,7 @@ class IonSimErrorModel(AbstractNoisyNativeEmulator):
                 return self.average_chi_over_noise(interp_op, self.v0, param_ranges, self.sigmas)
 
     def idle(self, q, duration):
-        return diag([1, 1, 1, 1])
+        return diag([1.0, 1.0, 1.0, 1.0]) # WARNING: array must be of dtype=float
 
     # GJMS
     def gateduration_MS(self, q0, q1, phi, theta):
