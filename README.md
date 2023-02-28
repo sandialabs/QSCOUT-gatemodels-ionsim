@@ -18,18 +18,15 @@ to emulate the native its gate set.
 
 The QSCOUT Gate Models package is available on
 [GitLab](https://gitlab.com/jaqal/qscout-gatemodels-ionsim).
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install it,
-and all its dependencies:
 
-```bash
-pip install qscout-gatemodels-ionsim
-```
-
-To install from git, do **NOT** clone the entire repository unless you are
-interested in comparing many old versions of the gates used.  Instead:
+To install, do **NOT** clone the entire repository unless you are interested
+in comparing many old versions of the gates used.  Instead, clone only the
+`current` branch:
 
 ```bash
 git clone --single-branch https://gitlab.com/jaqal/qscout-gatemodels-ionsim.git
+cd qscout-gatemodels-ionsim
+pip install -e.
 ```
 
 To perform updates, do a "force" pull.  **Any changes in this repository will
